@@ -1,0 +1,11 @@
+node_modules/
+.venv/
+.env
+(1).env
+__pycache__/
+*.pyc
+*.log
+db_fallback.json
+dist/
+.DS_Store
+.gitignore.txt
