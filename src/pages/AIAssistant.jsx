@@ -32,8 +32,9 @@ export default function AIAssistant() {
       setSessionId(data.session_id);
       setMessages(m => [...m, { role: 'ai', content: data.response }]);
     } catch (err) {
-      toast.error('Chat failed. Please ensure the backend is running.');
-      setMessages(m => [...m, { role: 'ai', content: '⚠️ Unable to connect to the AI assistant. Please ensure the backend is running and your API key is configured.' }]);
+      const detail = err.response?.data?.detail || 'Chat failed. Ensure the backend is running and GEMINI_API_KEY is set.';
+      toast.error(detail);
+      setMessages(m => [...m, { role: 'ai', content: `⚠️ ${detail}` }]);
     } finally {
       setLoading(false);
     }

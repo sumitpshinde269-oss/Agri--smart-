@@ -270,19 +270,159 @@ def score_crop(crop_profile: dict, inp: CropInput) -> float:
         total_score += param_score * weight
     return round(total_score * 100, 2)
 
+# ─────────────────── Marketplace Catalog ───────────────────────────────────
+MARKETPLACE_CATALOG = [
+    {
+        "title": "HD-2967 Wheat Seed (Certified, 40kg)",
+        "description": "Punjab Agricultural University certified wheat seed. High tillering, rust-tolerant, suited for North Indian rabi season.",
+        "price": 1450.0,
+        "category": "Seeds",
+        "seller_name": "Green Valley Seeds",
+        "location": "Ludhiana, Punjab",
+        "image_url": "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&q=80",
+        "is_organic": False,
+    },
+    {
+        "title": "Arize 6444 Hybrid Paddy Seed (5kg)",
+        "description": "Short-duration hybrid paddy for kharif. Strong stem, high yield potential of 7–8 tons/ha under irrigated conditions.",
+        "price": 1850.0,
+        "category": "Seeds",
+        "seller_name": "SeedTech India",
+        "location": "Raichur, Karnataka",
+        "image_url": "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&q=80",
+        "is_organic": False,
+    },
+    {
+        "title": "Organic Desi Tomato Seed (100g)",
+        "description": "Open-pollinated organic tomato seed for kitchen gardens and open-field cultivation. No chemical treatment.",
+        "price": 320.0,
+        "category": "Seeds",
+        "seller_name": "EcoFarm Organics",
+        "location": "Nashik, Maharashtra",
+        "image_url": "https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=400&q=80",
+        "is_organic": True,
+    },
+    {
+        "title": "NPK 19-19-19 Water Soluble Fertilizer 25kg",
+        "description": "Balanced NPK for fertigation and foliar spray. Improves vegetative growth and fruit setting across vegetables and field crops.",
+        "price": 2100.0,
+        "category": "Fertilizers",
+        "seller_name": "AgriChem Solutions",
+        "location": "Karnal, Haryana",
+        "image_url": "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&q=80",
+        "is_organic": False,
+    },
+    {
+        "title": "Urea 46% Nitrogen Fertilizer 45kg",
+        "description": "ISI-marked urea bag for cereal and cash crops. Apply in split doses after irrigation for better nitrogen use efficiency.",
+        "price": 266.0,
+        "category": "Fertilizers",
+        "seller_name": "Krishi Inputs Depot",
+        "location": "Meerut, Uttar Pradesh",
+        "image_url": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&q=80",
+        "is_organic": False,
+    },
+    {
+        "title": "Vermicompost 50kg Bag",
+        "description": "Fully decomposed earthworm compost rich in organic carbon and beneficial microbes. Improves soil structure and water retention.",
+        "price": 450.0,
+        "category": "Fertilizers",
+        "seller_name": "EcoFarm Organics",
+        "location": "Pune, Maharashtra",
+        "image_url": "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=400&q=80",
+        "is_organic": True,
+    },
+    {
+        "title": "Stainless Steel Hand Tool Kit (5 pc)",
+        "description": "Includes trowel, cultivator, weeder, fork, and transplanter with rubber grips for nursery and vegetable beds.",
+        "price": 899.0,
+        "category": "Tools",
+        "seller_name": "FarmTools Co.",
+        "location": "Rajkot, Gujarat",
+        "image_url": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&q=80",
+        "is_organic": False,
+    },
+    {
+        "title": "Knapsack Manual Sprayer 16L",
+        "description": "Pressure-retaining backpack sprayer for pesticides and foliar fertilizers. Adjustable brass nozzle included.",
+        "price": 1250.0,
+        "category": "Tools",
+        "seller_name": "AgriCare Store",
+        "location": "Coimbatore, Tamil Nadu",
+        "image_url": "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&q=80",
+        "is_organic": False,
+    },
+    {
+        "title": "Battery Operated Mini Tiller 2HP",
+        "description": "Lightweight electric tiller for small plots and polyhouses. Ideal for seedbed preparation without diesel fumes.",
+        "price": 18500.0,
+        "category": "Equipment",
+        "seller_name": "AgroMach India",
+        "location": "Indore, Madhya Pradesh",
+        "image_url": "https://images.unsplash.com/photo-1589923188651-268a9765e432?w=400&q=80",
+        "is_organic": False,
+    },
+    {
+        "title": "Drip Irrigation Kit (1 Acre)",
+        "description": "Complete drip set with laterals, drippers, filter, and venturi. Saves 30–40% water compared to flood irrigation.",
+        "price": 22000.0,
+        "category": "Equipment",
+        "seller_name": "JalSeva Irrigation",
+        "location": "Jalgaon, Maharashtra",
+        "image_url": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=80",
+        "is_organic": False,
+    },
+    {
+        "title": "Alphonso Mangoes GI-Tagged (12kg)",
+        "description": "Ratnagiri Alphonso mangoes, naturally ripened. Direct from orchard — suitable for retail and export packing.",
+        "price": 2800.0,
+        "category": "Produce",
+        "seller_name": "Ratnagiri Orchards",
+        "location": "Ratnagiri, Maharashtra",
+        "image_url": "https://images.unsplash.com/photo-1553279768-865429fa0078?w=400&q=80",
+        "is_organic": True,
+    },
+    {
+        "title": "Basmati 1121 Paddy Grain (50kg)",
+        "description": "Extra-long grain basmati from Haryana. Low moisture, suitable for milling and wholesale trade.",
+        "price": 3200.0,
+        "category": "Produce",
+        "seller_name": "Yamuna Grain Traders",
+        "location": "Karnal, Haryana",
+        "image_url": "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&q=80",
+        "is_organic": False,
+    },
+]
+
+
+def _serialize_listing(doc: dict) -> dict:
+    """Return a JSON-safe marketplace listing (no Mongo _id, ISO dates)."""
+    out = {}
+    for key, value in doc.items():
+        if key == "_id":
+            continue
+        if isinstance(value, datetime):
+            out[key] = value.isoformat()
+        else:
+            out[key] = value
+    return out
+
+
+def _build_marketplace_docs() -> list:
+    now = datetime.now(timezone.utc)
+    return [
+        {"id": str(uuid.uuid4()), **item, "created_at": now}
+        for item in MARKETPLACE_CATALOG
+    ]
+
+
 # ─────────────────── Seed Data ─────────────────────────────────────────────
 async def seed_data():
-    # Marketplace
-    if await db["marketplace"].count_documents({}) == 0:
-        listings = [
-            {"id": str(uuid.uuid4()), "title": "Organic Wheat Seeds - Premium Quality", "description": "High-yield organic wheat seeds, certified and tested for disease resistance.", "price": 850.0, "category": "Seeds", "seller_name": "Green Valley Farms", "location": "Punjab, India", "image_url": "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&q=80", "is_organic": True, "created_at": datetime.now(timezone.utc)},
-            {"id": str(uuid.uuid4()), "title": "NPK 19-19-19 Fertilizer 50kg", "description": "Balanced NPK fertilizer for all crops. Water-soluble formula for quick absorption.", "price": 1200.0, "category": "Fertilizers", "seller_name": "AgriChem Solutions", "location": "Haryana, India", "image_url": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&q=80", "is_organic": False, "created_at": datetime.now(timezone.utc)},
-            {"id": str(uuid.uuid4()), "title": "Hybrid Tomato Seeds F1 (100g)", "description": "Disease-resistant F1 hybrid tomato seeds. High yield potential of 60-80 tons/ha.", "price": 450.0, "category": "Seeds", "seller_name": "SeedTech India", "location": "Karnataka, India", "image_url": "https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=400&q=80", "is_organic": False, "created_at": datetime.now(timezone.utc)},
-            {"id": str(uuid.uuid4()), "title": "Stainless Steel Garden Tool Set (5pc)", "description": "Ergonomic hand tool set including trowel, cultivator, fork, weeder, and transplanter.", "price": 799.0, "category": "Tools", "seller_name": "FarmTools Co.", "location": "Gujarat, India", "image_url": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&q=80", "is_organic": False, "created_at": datetime.now(timezone.utc)},
-            {"id": str(uuid.uuid4()), "title": "Organic Vermicompost 25kg", "description": "Rich organic vermicompost packed with beneficial microorganisms. Improves soil structure.", "price": 350.0, "category": "Fertilizers", "seller_name": "EcoFarm Organics", "location": "Maharashtra, India", "image_url": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&q=80", "is_organic": True, "created_at": datetime.now(timezone.utc)},
-            {"id": str(uuid.uuid4()), "title": "Fresh Alphonso Mangoes (12kg Box)", "description": "Premium Alphonso mangoes directly from the orchard. Naturally ripened, no chemicals.", "price": 1500.0, "category": "Produce", "seller_name": "Ratnagiri Farms", "location": "Maharashtra, India", "image_url": "https://images.unsplash.com/photo-1553279768-865429fa0078?w=400&q=80", "is_organic": True, "created_at": datetime.now(timezone.utc)},
-        ]
-        await db["marketplace"].insert_many(listings)
+    # Marketplace — always ensure products exist for every category filter
+    marketplace_count = await db["marketplace"].count_documents({})
+    if marketplace_count == 0:
+        await db["marketplace"].insert_many(_build_marketplace_docs())
+        print(f"Seeded {len(MARKETPLACE_CATALOG)} marketplace listings.")
 
     # News
     if await db["news"].count_documents({}) == 0:
@@ -482,12 +622,51 @@ async def chat(inp: ChatInput):
 
 @app.get("/api/marketplace")
 async def get_marketplace(category: Optional[str] = Query(None)):
-    query = {}
-    if category and category != "All":
-        query["category"] = category
-    cursor = db["marketplace"].find(query, {"_id": 0}).sort("created_at", -1)
-    listings = await cursor.to_list(length=100)
-    return listings
+    try:
+        count = await db["marketplace"].count_documents({})
+        if count == 0:
+            await db["marketplace"].insert_many(_build_marketplace_docs())
+        elif count < len(MARKETPLACE_CATALOG):
+            # Refresh incomplete catalogs (e.g. missing Equipment) with the full product list
+            await _replace_marketplace()
+
+        query = {}
+        if category and category != "All":
+            query["category"] = category
+
+        cursor = db["marketplace"].find(query, {"_id": 0}).sort("created_at", -1)
+        listings = await cursor.to_list(length=200)
+        return [_serialize_listing(item) for item in listings]
+    except Exception as e:
+        print(f"Marketplace error: {e}")
+        # Last-resort: serve catalog directly so the UI never stays empty
+        filtered = MARKETPLACE_CATALOG
+        if category and category != "All":
+            filtered = [p for p in MARKETPLACE_CATALOG if p["category"] == category]
+        now = datetime.now(timezone.utc).isoformat()
+        return [
+            {"id": str(uuid.uuid4()), **item, "created_at": now}
+            for item in filtered
+        ]
+
+
+async def _replace_marketplace():
+    """Replace marketplace collection contents with the current catalog."""
+    try:
+        # Motor / MongoDB
+        if hasattr(db["marketplace"], "delete_many"):
+            await db["marketplace"].delete_many({})
+        else:
+            # In-memory fallback: clear list in place
+            docs = db["marketplace"]._get_docs()
+            docs.clear()
+            if hasattr(db, "_save"):
+                db._save()
+    except Exception as e:
+        print(f"Could not clear marketplace before refresh: {e}")
+    await db["marketplace"].insert_many(_build_marketplace_docs())
+    print(f"Refreshed marketplace with {len(MARKETPLACE_CATALOG)} listings.")
+
 
 @app.post("/api/marketplace", status_code=201)
 async def create_listing(listing: MarketplaceListing):
@@ -497,8 +676,7 @@ async def create_listing(listing: MarketplaceListing):
         "created_at": datetime.now(timezone.utc),
     }
     await db["marketplace"].insert_one(doc)
-    doc.pop("_id", None)
-    return doc
+    return _serialize_listing(doc)
 
 @app.get("/api/news")
 async def get_news(category: Optional[str] = Query(None)):

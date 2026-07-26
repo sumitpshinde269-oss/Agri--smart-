@@ -35,15 +35,23 @@ class InMemoryCursor:
                 doc_copy = dict(doc)
                 filtered.append(doc_copy)
 
-        # Sort
+        # Sort (normalize keys so datetime/str/None never crash comparisons)
+        def _sort_key(val):
+            if val is None:
+                return ""
+            if isinstance(val, datetime):
+                return val.isoformat()
+            return str(val)
+
         if self.sort_params:
             if isinstance(self.sort_params, list):
                 for key, direction in reversed(self.sort_params):
                     reverse = (direction == -1)
-                    filtered.sort(key=lambda x: x.get(key, 0) or 0, reverse=reverse)
+                    filtered.sort(key=lambda x, k=key: _sort_key(x.get(k)), reverse=reverse)
             elif isinstance(self.sort_params, str):
                 reverse = (direction == -1) if direction else False
-                filtered.sort(key=lambda x: x.get(self.sort_params, 0) or 0, reverse=reverse)
+                key = self.sort_params
+                filtered.sort(key=lambda x, k=key: _sort_key(x.get(k)), reverse=reverse)
 
         # Limit
         limit = self.limit_val
@@ -106,6 +114,22 @@ class InMemoryCollection:
             docs.append(dict(doc))
         self.db._save()
         return documents
+
+    async def delete_many(self, filter=None):
+        filter = filter or {}
+        docs = self._get_docs()
+        if not filter:
+            docs.clear()
+        else:
+            kept = []
+            for doc in docs:
+                match = all(doc.get(k) == v for k, v in filter.items())
+                if not match:
+                    kept.append(doc)
+            docs.clear()
+            docs.extend(kept)
+        self.db._save()
+        return {"deleted": True}
 
     def find(self, query=None, projection=None, sort=None, limit=None):
         docs = self._get_docs()

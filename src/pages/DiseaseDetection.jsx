@@ -67,7 +67,7 @@ export default function DiseaseDetection() {
       toast.success('Analysis complete!');
     } catch (err) {
       clearInterval(stepInterval);
-      toast.error(err.response?.data?.detail || 'Analysis failed. Ensure backend and OpenAI key are configured.');
+      toast.error(err.response?.data?.detail || 'Analysis failed. Ensure the backend is running and GEMINI_API_KEY is set.');
     } finally {
       setLoading(false);
     }

@@ -21,15 +21,21 @@ export default function Marketplace() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetch = async () => {
+    const fetchListings = async () => {
       setLoading(true);
       try {
-        const { data } = await axios.get(`${API}/api/marketplace`, { params: cat !== 'All' ? { category: cat } : {} });
-        setListings(data);
-      } catch { setListings([]); }
-      finally { setLoading(false); }
+        const { data } = await axios.get(`${API}/api/marketplace`, {
+          params: cat !== 'All' ? { category: cat } : {},
+        });
+        setListings(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error('Marketplace fetch failed:', err);
+        setListings([]);
+      } finally {
+        setLoading(false);
+      }
     };
-    fetch();
+    fetchListings();
   }, [cat]);
 
   return (
@@ -122,7 +128,7 @@ export default function Marketplace() {
 
                     <div className="flex items-center justify-between">
                       <span className="text-2xl font-heading font-black text-emerald-700">
-                        ₹{item.price.toLocaleString('en-IN')}
+                        ₹{(Number(item.price) || 0).toLocaleString('en-IN')}
                       </span>
                       <button className="btn-primary py-2 px-4 text-xs">{t('marketplace.viewDetails')}</button>
                     </div>

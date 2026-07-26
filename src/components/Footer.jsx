@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Leaf, Mail, Phone, Share2, MessageSquare, Play } from 'lucide-react';
+import { Leaf, Share2, MessageSquare, Play } from 'lucide-react';
 
 export default function Footer() {
   const { t } = useTranslation();
@@ -50,24 +50,8 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
-          <div>
-            <h3 className="font-heading font-semibold text-white mb-4">{t('footer.contact')}</h3>
-            <div className="space-y-3">
-              <a href="mailto:support@agrismart.com" className="flex items-center gap-3 text-sm text-stone-400 hover:text-emerald-400 transition-colors">
-                <Mail className="w-4 h-4 flex-shrink-0" />
-                support@agrismart.com
-              </a>
-              <a href="tel:+911800FARMING" className="flex items-center gap-3 text-sm text-stone-400 hover:text-emerald-400 transition-colors">
-                <Phone className="w-4 h-4 flex-shrink-0" />
-                +91 1800-FARMING
-              </a>
-            </div>
-            <div className="mt-6 p-4 bg-emerald-900/30 rounded-xl border border-emerald-800/30">
-              <p className="text-xs text-emerald-400 font-medium">🌱 Free for all farmers</p>
-              <p className="text-xs text-stone-400 mt-1">No subscription required</p>
-            </div>
-          </div>
+          {/* Contact section removed — space intentionally left empty */}
+          <div aria-hidden="true" />
         </div>
 
         <div className="mt-10 pt-6 border-t border-stone-800 text-center">
