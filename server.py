@@ -621,33 +621,54 @@ async def chat(inp: ChatInput):
         _raise_gemini_error(e, "Chat")
 
 @app.get("/api/marketplace")
-async def get_marketplace(category: Optional[str] = Query(None)):
+async def get_marketplace(category: Optional[str] = None):
     try:
         count = await db["marketplace"].count_documents({})
-        if count == 0:
-            await db["marketplace"].insert_many(_build_marketplace_docs())
-        elif count < len(MARKETPLACE_CATALOG):
-            # Refresh incomplete catalogs (e.g. missing Equipment) with the full product list
+        if count < len(MARKETPLACE_CATALOG):
             await _replace_marketplace()
 
+        cat_str = category if isinstance(category, str) else None
         query = {}
-        if category and category != "All":
-            query["category"] = category
+        normalized_cat = None
+        if cat_str and cat_str.strip().lower() != "all":
+            clean_cat = cat_str.strip().lower()
+            # Normalize to match catalog casing
+            for item in MARKETPLACE_CATALOG:
+                if item["category"].lower() == clean_cat:
+                    normalized_cat = item["category"]
+                    break
+            query["category"] = normalized_cat or cat_str.strip()
 
         cursor = db["marketplace"].find(query, {"_id": 0}).sort("created_at", -1)
         listings = await cursor.to_list(length=200)
+        
+        # If DB query returned no results for a valid category, fallback to catalog filter
+        if not listings:
+            filtered = MARKETPLACE_CATALOG
+            if normalized_cat:
+                filtered = [p for p in MARKETPLACE_CATALOG if p["category"] == normalized_cat]
+            elif cat_str and cat_str.strip().lower() != "all":
+                filtered = [p for p in MARKETPLACE_CATALOG if p["category"].lower() == cat_str.strip().lower()]
+            now = datetime.now(timezone.utc).isoformat()
+            return [
+                {"id": str(uuid.uuid4()), **item, "created_at": now}
+                for item in filtered
+            ]
+
         return [_serialize_listing(item) for item in listings]
     except Exception as e:
         print(f"Marketplace error: {e}")
-        # Last-resort: serve catalog directly so the UI never stays empty
+        cat_str = category if isinstance(category, str) else None
+        # Last-resort fallback: serve catalog directly so the UI never stays empty
         filtered = MARKETPLACE_CATALOG
-        if category and category != "All":
-            filtered = [p for p in MARKETPLACE_CATALOG if p["category"] == category]
+        if cat_str and cat_str.strip().lower() != "all":
+            filtered = [p for p in MARKETPLACE_CATALOG if p["category"].lower() == cat_str.strip().lower()]
         now = datetime.now(timezone.utc).isoformat()
         return [
             {"id": str(uuid.uuid4()), **item, "created_at": now}
             for item in filtered
         ]
+
 
 
 async def _replace_marketplace():
@@ -678,11 +699,58 @@ async def create_listing(listing: MarketplaceListing):
     await db["marketplace"].insert_one(doc)
     return _serialize_listing(doc)
 
+NEWS_ARTICLES = [
+    {"id": str(uuid.uuid4()), "title": "AI-Powered Crop Disease Detection Achieves 95% Accuracy", "category": "Technology", "content": "A new AI system developed by researchers can detect over 50 plant diseases with 95% accuracy, potentially saving billions in crop losses annually. The system uses advanced computer vision models trained on over 2 million leaf images.\n\nFarmers can now use smartphone apps integrated with this technology to get instant diagnoses in the field, reducing dependence on expert consultants. Early detection means diseases can be treated before they spread.\n\nThe technology is expected to be available as a commercial product by Q3 this year.", "image_url": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80", "published_at": "2026-04-14T00:00:00+00:00"},
+    {"id": str(uuid.uuid4()), "title": "Wheat Prices Hit 3-Year High Amid Global Supply Concerns", "category": "Market Prices", "content": "Wheat futures surged 12% this month as adverse weather conditions in major producing regions raised supply concerns. India's wheat crop output is estimated at 108 million tonnes, slightly below last year's record.\n\nExperts advise farmers to consider forward contracts to lock in current favorable prices. The government has also raised the Minimum Support Price (MSP) for wheat by ₹150 per quintal.\n\nSmall-scale farmers are encouraged to use cooperatives and FPOs to negotiate better prices in wholesale markets.", "image_url": "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&q=80", "published_at": "2026-04-12T00:00:00+00:00"},
+    {"id": str(uuid.uuid4()), "title": "PM Kisan Scheme: ₹2000 Installment Released for 9 Crore Farmers", "category": "Government Schemes", "content": "The Ministry of Agriculture confirmed the release of the next PM-KISAN installment, providing direct cash benefit of ₹2000 to over 9 crore registered farmers across India.\n\nEligible farmers who haven't registered yet can do so at their nearest Common Service Centre (CSC) or online at pmkisan.gov.in. The scheme provides ₹6000 per year in three installments.\n\nAdditionally, the government announced a new ₹1.5 lakh crore agriculture credit scheme with reduced interest rates for small and marginal farmers.", "image_url": "https://images.unsplash.com/photo-1589923188651-268a9765e432?w=600&q=80", "published_at": "2026-04-10T00:00:00+00:00"},
+    {"id": str(uuid.uuid4()), "title": "Organic Farming Area in India Grows by 30% in 2026", "category": "Trends", "content": "India's organic farming area has grown by 30% from last year, reaching over 4.5 million hectares. Sikkim remains 100% organic, and Maharashtra leads in the number of certified organic farmers.\n\nConsumer demand for organic produce has driven premium prices 40-60% higher than conventional produce. Government subsidies for organic certification are also making the transition more affordable.\n\nExperts recommend farmers start with high-value crops like vegetables, spices, and pulses when transitioning to organic methods.", "image_url": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&q=80", "published_at": "2026-04-08T00:00:00+00:00"},
+    {"id": str(uuid.uuid4()), "title": "Drone-Based Pesticide Spraying Reduces Chemical Use by 40%", "category": "Technology", "content": "Agricultural drones equipped with precision nozzles are helping farmers reduce pesticide use by up to 40% while improving coverage uniformity. The technology is particularly effective for large fields of cotton, sugarcane, and paddy.\n\nThe government's Drone Didi scheme is training rural women as certified drone pilots, creating new income opportunities. Over 1000 women have been trained so far.\n\nDrones can cover 10 acres in an hour versus 2 acres for manual spraying, significantly reducing labor costs during peak periods.", "image_url": "https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=600&q=80", "published_at": "2026-04-05T00:00:00+00:00"},
+    {"id": str(uuid.uuid4()), "title": "Climate-Smart Agriculture: Adapting to Changing Monsoon Patterns", "category": "Trends", "content": "As monsoon patterns become increasingly unpredictable, agricultural scientists are developing climate-smart crop varieties and farming practices. New drought-tolerant rice varieties can withstand 2-week dry spells during the growing season.\n\nSoil moisture sensors and IoT devices are helping farmers optimize irrigation timing, reducing water use by up to 30%. These technologies are now becoming affordable for small farmers through government subsidy programs.\n\nFarmers are also being trained in Conservation Agriculture (CA) practices like minimum tillage and crop residue management to build soil health and resilience.", "image_url": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&q=80", "published_at": "2026-04-02T00:00:00+00:00"},
+]
+
+def _serialize_news(doc: dict) -> dict:
+    out = {}
+    for key, value in doc.items():
+        if key == "_id":
+            continue
+        if isinstance(value, datetime):
+            out[key] = value.isoformat()
+        else:
+            out[key] = value
+    return out
+
 @app.get("/api/news")
-async def get_news(category: Optional[str] = Query(None)):
-    query = {}
-    if category and category != "All":
-        query["category"] = category
-    cursor = db["news"].find(query, {"_id": 0}).sort("published_at", -1)
-    articles = await cursor.to_list(length=100)
-    return articles
+async def get_news(category: Optional[str] = None):
+    try:
+        if await db["news"].count_documents({}) == 0:
+            await db["news"].insert_many(NEWS_ARTICLES)
+
+        cat_str = category if isinstance(category, str) else None
+        query = {}
+        if cat_str and cat_str.strip().lower() != "all":
+            clean_cat = cat_str.strip().lower()
+            # Match exact category casing if possible
+            for a in NEWS_ARTICLES:
+                if a["category"].lower() == clean_cat:
+                    query["category"] = a["category"]
+                    break
+            if "category" not in query:
+                query["category"] = cat_str.strip()
+
+        cursor = db["news"].find(query, {"_id": 0}).sort("published_at", -1)
+        articles = await cursor.to_list(length=100)
+
+        if not articles:
+            filtered = NEWS_ARTICLES
+            if category and category.strip().lower() != "all":
+                filtered = [a for a in NEWS_ARTICLES if a["category"].lower() == category.strip().lower()]
+            return filtered
+
+        return [_serialize_news(a) for a in articles]
+    except Exception as e:
+        print(f"News fetch error: {e}")
+        filtered = NEWS_ARTICLES
+        if category and category.strip().lower() != "all":
+            filtered = [a for a in NEWS_ARTICLES if a["category"].lower() == category.strip().lower()]
+        return filtered
+
