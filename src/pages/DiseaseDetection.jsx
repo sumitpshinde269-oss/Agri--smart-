@@ -5,7 +5,7 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { Microscope, Upload, ImageIcon, CheckCircle, AlertCircle, Shield, X } from 'lucide-react';
 
-const API = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8001';
+const API = import.meta.env.VITE_BACKEND_URL || 'https://agri-smart-backend-5cp8.onrender.com';
 
 const PROGRESS_STEPS = [
   'Image received',

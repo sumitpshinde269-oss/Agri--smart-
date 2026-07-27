@@ -5,7 +5,7 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { Sprout, FlaskConical, Thermometer, Droplets, Cloud, Leaf, CheckCircle } from 'lucide-react';
 
-const API = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8001';
+const API = import.meta.env.VITE_BACKEND_URL || 'https://agri-smart-backend-5cp8.onrender.com';
 
 const ICONS = {
   Rice: '🌾', Wheat: '🌿', Maize: '🌽', Cotton: '🪴',

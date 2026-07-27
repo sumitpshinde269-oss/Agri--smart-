@@ -5,7 +5,7 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { MessageCircle, Send, Sparkles, User } from 'lucide-react';
 
-const API = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8001';
+const API = import.meta.env.VITE_BACKEND_URL || 'https://agri-smart-backend-5cp8.onrender.com';
 
 export default function AIAssistant() {
   const { t } = useTranslation();

@@ -742,15 +742,23 @@ async def get_news(category: Optional[str] = None):
 
         if not articles:
             filtered = NEWS_ARTICLES
-            if category and category.strip().lower() != "all":
-                filtered = [a for a in NEWS_ARTICLES if a["category"].lower() == category.strip().lower()]
+            if cat_str and cat_str.strip().lower() != "all":
+                filtered = [a for a in NEWS_ARTICLES if a["category"].lower() == cat_str.strip().lower()]
             return filtered
 
         return [_serialize_news(a) for a in articles]
     except Exception as e:
         print(f"News fetch error: {e}")
+        cat_str = category if isinstance(category, str) else None
         filtered = NEWS_ARTICLES
-        if category and category.strip().lower() != "all":
-            filtered = [a for a in NEWS_ARTICLES if a["category"].lower() == category.strip().lower()]
+        if cat_str and cat_str.strip().lower() != "all":
+            filtered = [a for a in NEWS_ARTICLES if a["category"].lower() == cat_str.strip().lower()]
         return filtered
+
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.getenv("PORT", 8001))
+    uvicorn.run("server:app", host="0.0.0.0", port=port, reload=False)
+
 

@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { Newspaper, Clock, Filter } from 'lucide-react';
 
-const API = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8001';
+const API = import.meta.env.VITE_BACKEND_URL || 'https://agri-smart-backend-5cp8.onrender.com';
 const CATS = ['All', 'Technology', 'Market Prices', 'Trends', 'Government Schemes'];
 
 const CAT_COLORS = {
