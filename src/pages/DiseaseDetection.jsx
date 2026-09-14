@@ -176,7 +176,7 @@ export default function DiseaseDetection() {
                       <h3 className="text-2xl font-heading font-black text-stone-900">{result.disease_name}</h3>
                     </div>
                     <span className={`badge text-sm font-bold ${isHealthy ? 'bg-emerald-100 text-emerald-800' : confidencePct > 70 ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800'}`}>
-                      {isHealthy ? '✓ Healthy' : `⚠ ${confidencePct}% sure`}
+                      {isHealthy ? 'Healthy' : `${confidencePct}% Confidence`}
                     </span>
                   </div>
 
