@@ -57,7 +57,7 @@ const hi = {
   footer: {
     tagline: 'बेहतर उपज और स्मार्ट निर्णयों के लिए AI तकनीक से किसानों को सशक्त बनाना।',
     quickLinks: 'त्वरित लिंक', contact: 'संपर्क',
-    copyright: '© 2026 AgriSmart Connect. दुनिया भर के किसानों के लिए ❤️ से बनाया।',
+    copyright: '© 2026 AgriSmart Connect. दुनिया भर के किसानों के लिए समर्पित।',
   },
   common: {
     loading: 'लोड हो रहा है...', error: 'कुछ गलत हो गया।', retry: 'पुन: प्रयास करें',

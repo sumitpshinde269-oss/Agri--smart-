@@ -102,13 +102,17 @@ export default function Marketplace() {
                   className="card overflow-hidden group"
                 >
                   {/* Image */}
-                  <div className="relative h-52 overflow-hidden">
-                    <img
-                      src={item.image_url || 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&q=80'}
-                      alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                  <div className="relative h-52 overflow-hidden bg-stone-100 flex items-center justify-center">
+                    {item.image_url ? (
+                      <img
+                        src={item.image_url}
+                        alt={item.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <ShoppingBag className="w-12 h-12 text-stone-300" />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
                     {item.is_organic && (
                       <span className="absolute top-3 right-3 badge bg-emerald-500 text-white">
                         <Leaf className="w-3 h-3 mr-1" /> {t('marketplace.organic')}

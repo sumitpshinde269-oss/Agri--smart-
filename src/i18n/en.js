@@ -85,7 +85,7 @@ const en = {
     tagline: 'Empowering farmers with AI technology for better yields and smarter decisions.',
     quickLinks: 'Quick Links',
     contact: 'Contact',
-    copyright: '© 2026 AgriSmart Connect. Built with ❤️ for farmers worldwide.',
+    copyright: '© 2026 AgriSmart Connect. Built for farmers worldwide.',
   },
   common: {
     loading: 'Loading...', error: 'Something went wrong.', retry: 'Try Again',

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import {
   Sprout, Microscope, MessageCircle, ShoppingBag,
-  Newspaper, ArrowRight, CheckCircle, Leaf, TrendingUp, Users,
+  ArrowRight, CheckCircle, Leaf,
 } from 'lucide-react';
 
 const fadeUp = {
@@ -14,11 +14,6 @@ const fadeUp = {
   }),
 };
 
-const STATS = [
-  { value: '10K+', labelKey: 'hero.stat1', icon: Sprout },
-  { value: '95%',  labelKey: 'hero.stat2', icon: TrendingUp },
-  { value: '3',    labelKey: 'hero.stat3', icon: Users },
-];
 
 const BENEFITS = [
   'Real-time AI analysis based on soil data',
@@ -112,18 +107,7 @@ export default function LandingPage() {
               </Link>
             </motion.div>
 
-            {/* Stats */}
-            <motion.div
-              variants={fadeUp} initial="hidden" animate="visible" custom={4}
-              className="flex gap-8 mt-10 pt-8 border-t border-emerald-700/50"
-            >
-              {STATS.map(({ value, labelKey, icon: Icon }) => (
-                <div key={labelKey} className="text-center">
-                  <p className="text-3xl font-heading font-black text-white">{value}</p>
-                  <p className="text-xs text-emerald-300 mt-1">{t(labelKey)}</p>
-                </div>
-              ))}
-            </motion.div>
+            </div>
           </div>
 
           {/* Hero visual */}
@@ -140,37 +124,6 @@ export default function LandingPage() {
                 alt="Farmer using technology"
                 className="w-full h-full object-cover rounded-3xl shadow-2xl"
               />
-              {/* Floating card */}
-              <motion.div
-                animate={{ y: [0, -8, 0] }}
-                transition={{ repeat: Infinity, duration: 3 }}
-                className="absolute -bottom-4 -left-4 bg-white rounded-2xl p-4 shadow-xl"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
-                    <Sprout className="w-5 h-5 text-emerald-700" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-stone-500">AI Recommendation</p>
-                    <p className="text-sm font-semibold text-stone-900">Rice — 92% match</p>
-                  </div>
-                </div>
-              </motion.div>
-              <motion.div
-                animate={{ y: [0, 8, 0] }}
-                transition={{ repeat: Infinity, duration: 4, delay: 1 }}
-                className="absolute -top-4 -right-4 bg-white rounded-2xl p-4 shadow-xl"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
-                    <Microscope className="w-5 h-5 text-amber-700" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-stone-500">Disease Scan</p>
-                    <p className="text-sm font-semibold text-emerald-700">✓ Healthy Leaf</p>
-                  </div>
-                </div>
-              </motion.div>
             </div>
           </motion.div>
         </div>
@@ -260,7 +213,7 @@ export default function LandingPage() {
             Ready to grow smarter?
           </h2>
           <p className="text-emerald-200 mb-8 text-lg">
-            Join thousands of farmers already using AI to improve yields and reduce losses.
+            Empower your farming with AI tools to improve crop yields and prevent disease.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link to="/crop-recommendation" className="btn-amber text-base px-8 py-4">

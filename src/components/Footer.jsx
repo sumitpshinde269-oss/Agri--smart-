@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Leaf, Share2, MessageSquare, Play } from 'lucide-react';
+import { Leaf } from 'lucide-react';
 
 export default function Footer() {
   const { t } = useTranslation();
@@ -17,7 +17,7 @@ export default function Footer() {
   return (
     <footer className="bg-stone-950 text-stone-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
@@ -26,14 +26,7 @@ export default function Footer() {
               </div>
               <span className="font-heading font-bold text-xl text-white">AgriSmart Connect</span>
             </div>
-            <p className="text-sm text-stone-400 leading-relaxed">{t('footer.tagline')}</p>
-            <div className="flex items-center gap-3 mt-5">
-              {[Share2, MessageSquare, Play].map((Icon, i) => (
-                <a key={i} href="#" className="w-9 h-9 rounded-full bg-stone-800 flex items-center justify-center hover:bg-emerald-700 transition-colors">
-                  <Icon className="w-4 h-4" />
-                </a>
-              ))}
-            </div>
+            <p className="text-sm text-stone-400 leading-relaxed max-w-md">{t('footer.tagline')}</p>
           </div>
 
           {/* Quick Links */}
@@ -49,9 +42,6 @@ export default function Footer() {
               ))}
             </ul>
           </div>
-
-          {/* Contact section removed — space intentionally left empty */}
-          <div aria-hidden="true" />
         </div>
 
         <div className="mt-10 pt-6 border-t border-stone-800 text-center">
