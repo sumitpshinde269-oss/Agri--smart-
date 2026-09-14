@@ -34,7 +34,7 @@ export default function AIAssistant() {
     } catch (err) {
       const detail = err.response?.data?.detail || 'Chat failed. Ensure the backend is running and GEMINI_API_KEY is set.';
       toast.error(detail);
-      setMessages(m => [...m, { role: 'ai', content: `⚠️ ${detail}` }]);
+      setMessages(m => [...m, { role: 'ai', content: detail }]);
     } finally {
       setLoading(false);
     }
