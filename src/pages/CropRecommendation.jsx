@@ -7,10 +7,6 @@ import { Sprout, FlaskConical, Thermometer, Droplets, Cloud, Leaf, CheckCircle }
 
 const API = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8001';
 
-const ICONS = {
-  Rice: '🌾', Wheat: '🌿', Maize: '🌽', Cotton: '🪴',
-  Tomato: '🍅', Potato: '🥔', Sugarcane: '🎋',
-};
 
 const FIELDS = [
   { key: 'nitrogen',    icon: FlaskConical, unit: 'mg/kg', min: 0, max: 300, step: 0.1, placeholder: 'e.g. 80' },
@@ -117,16 +113,6 @@ export default function CropRecommendation() {
               </form>
             </div>
 
-            {/* Quick presets */}
-            <div className="mt-4 p-4 bg-amber-50 rounded-xl border border-amber-100">
-              <p className="text-sm font-medium text-amber-800 mb-2">📌 Try these example values (typical Kharif crop land):</p>
-              <button
-                onClick={() => setForm({ nitrogen: '82', phosphorus: '48', potassium: '42', temperature: '26', humidity: '78', ph: '6.3', rainfall: '180' })}
-                className="text-xs text-amber-700 underline hover:text-amber-900 transition-colors"
-              >
-                Fill sample values →
-              </button>
-            </div>
           </motion.div>
 
           {/* Results */}
@@ -150,13 +136,14 @@ export default function CropRecommendation() {
                       className="card p-6"
                     >
                       <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          <span className="text-3xl">{ICONS[rec.crop_name] || '🌱'}</span>
-                          <div>
-                            <div className="flex items-center gap-2">
-                              {i === 0 && <span className="badge bg-amber-400/20 text-amber-800 text-xs">🏆 Best Match</span>}
-                              <h3 className="font-heading font-bold text-lg text-stone-900">{rec.crop_name}</h3>
-                            </div>
+                        <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                          <Sprout className="w-5 h-5 text-emerald-700" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            {i === 0 && <span className="badge bg-amber-400/20 text-amber-800 text-xs font-semibold">Best Match</span>}
+                            <h3 className="font-heading font-bold text-lg text-stone-900">{rec.crop_name}</h3>
+                          </div>
                             <p className="text-sm text-stone-500 mt-0.5">{rec.reason}</p>
                           </div>
                         </div>
